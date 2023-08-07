@@ -15,12 +15,6 @@ Client also sets up routing of all outgoing broadcast and multicast packets (255
 
 ## Installation
 
-### With AUR helper (for ArchLinux-based distros)
-
-```sh
-yay -Syu llanemu
-```
-
 ### Manually compile from source
 
 1. [Install Go](https://go.dev/).
