@@ -1,4 +1,4 @@
-module github.com/trickybestia/pog
+module github.com/trickybestia/llanemu
 
 go 1.20
 

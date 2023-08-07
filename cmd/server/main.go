@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"github.com/alexflint/go-arg"
-	"github.com/trickybestia/pog/internal/pog"
+	"github.com/trickybestia/llanemu/internal/llanemu"
 )
 
 type Args struct {
@@ -24,7 +24,7 @@ func relayFrame(frame []byte, sender net.Conn) {
 
 	for conn := range conns {
 		if conn != sender {
-			if err := pog.WritePacket(conn, frame); err != nil {
+			if err := llanemu.WritePacket(conn, frame); err != nil {
 				disconnectedConns = append(disconnectedConns, conn)
 			}
 		}
@@ -51,7 +51,7 @@ func handleConn(conn net.Conn) {
 	connsLock.Unlock()
 
 	for {
-		packet, err := pog.ReadPacket(conn)
+		packet, err := llanemu.ReadPacket(conn)
 
 		if err != nil {
 			break

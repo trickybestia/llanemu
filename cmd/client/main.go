@@ -4,7 +4,7 @@ import (
 	"net"
 
 	"github.com/alexflint/go-arg"
-	"github.com/trickybestia/pog/internal/pog"
+	"github.com/trickybestia/llanemu/internal/llanemu"
 
 	"log"
 )
@@ -53,7 +53,7 @@ func main() {
 
 	go func() {
 		for {
-			packet, err := pog.ReadPacket(conn)
+			packet, err := llanemu.ReadPacket(conn)
 
 			if err != nil {
 				log.Fatal(err)
@@ -74,7 +74,7 @@ func main() {
 			log.Fatal(err)
 		}
 
-		if err = pog.WritePacket(conn, buf[:read]); err != nil {
+		if err = llanemu.WritePacket(conn, buf[:read]); err != nil {
 			log.Fatal(err)
 		}
 	}

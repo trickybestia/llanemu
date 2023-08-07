@@ -1,3 +1,3 @@
-# pog
+# llanemu
 
-LAN emulator.
+Linux LAN emulator.
