@@ -38,3 +38,23 @@ go build -C cmd/server -o ../../build/llanemu-server -ldflags "-s -w"
 ```
 
 Built binaries will be at `llanemu/build` directory.
+
+## Usage
+
+### On server
+
+```sh
+llanemu-server --endpoint 10.10.0.1:12345
+```
+
+### On client A
+
+```sh
+llanemu --remote-endpoint 10.10.0.1:12345 --name llanemu-tap -a 192.168.123.1/24
+```
+
+### On client B
+
+```sh
+llanemu --remote-endpoint 10.10.0.1:12345 --name llanemu-tap -a 192.168.123.2/24
+```
