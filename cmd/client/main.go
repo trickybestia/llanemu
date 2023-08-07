@@ -4,6 +4,7 @@ import (
 	"net"
 
 	"github.com/alexflint/go-arg"
+	"github.com/songgao/water"
 	"github.com/trickybestia/llanemu/internal/llanemu"
 
 	"log"
@@ -27,13 +28,47 @@ func parseArgs() {
 
 	address, address_network, err = net.ParseCIDR(args.Address)
 
-	address = address.To4()
-
 	if err != nil {
 		p.Fail(err.Error())
 	}
 
+	address = address.To4()
+
+	if address == nil {
+		p.Fail("Valid IPv4 address expected")
+	}
+
 	network = *address_network
+}
+
+func pipeFromTAPToConn(tap *water.Interface, conn net.Conn) {
+	buf := make([]byte, 2048)
+
+	for {
+		read, err := tap.Read(buf)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if err = llanemu.WritePacket(conn, buf[:read]); err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
+func pipeFromConnToTAP(tap *water.Interface, conn net.Conn) {
+	for {
+		packet, err := llanemu.ReadPacket(conn)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if _, err = tap.Write(packet); err != nil {
+			log.Fatal(err, len(packet), packet)
+		}
+	}
 }
 
 func main() {
@@ -51,31 +86,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	go func() {
-		for {
-			packet, err := llanemu.ReadPacket(conn)
-
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			if _, err = tap.Write(packet); err != nil {
-				log.Fatal(err, len(packet), packet)
-			}
-		}
-	}()
-
-	buf := make([]byte, 1600)
-
-	for {
-		read, err := tap.Read(buf)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if err = llanemu.WritePacket(conn, buf[:read]); err != nil {
-			log.Fatal(err)
-		}
-	}
+	go pipeFromConnToTAP(tap, conn)
+	pipeFromTAPToConn(tap, conn)
 }
