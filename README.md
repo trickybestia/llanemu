@@ -52,3 +52,7 @@ llanemu --remote-endpoint 10.10.0.1:12345 --name llanemu-tap -a 192.168.123.1/24
 ```sh
 llanemu --remote-endpoint 10.10.0.1:12345 --name llanemu-tap -a 192.168.123.2/24
 ```
+
+## License
+
+Licensed under [GNU GPLv3](COPYING) only.
